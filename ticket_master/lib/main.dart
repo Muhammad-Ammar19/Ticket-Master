@@ -91,9 +91,9 @@ class TicketPageState extends State<TicketPage> {
     super.initState();
    
     section = 'FLR1';
-    row = '7';
+    row = '0';
     date = '2024-08-01';
-    time = '18:00';
+    time = '00:00';
     imageUrl = 'assets/images/seat1.png'; 
   }
 
