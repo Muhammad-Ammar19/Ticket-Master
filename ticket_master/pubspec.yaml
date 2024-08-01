@@ -37,9 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.6
   smooth_page_indicator: ^1.2.0+3
   image_picker: ^1.1.2
-  sqflite: ^2.2.0
-  path: ^1.8.0
-
+  hive: ^2.0.0
+  hive_flutter: ^1.0.0
+  path_provider: ^2.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -50,6 +50,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  hive_generator: ^1.0.1
+  build_runner: ^2.1.7
   flutter_launcher_icons: "^0.13.1"
 
 flutter_launcher_icons:

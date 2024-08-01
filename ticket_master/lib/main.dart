@@ -1,8 +1,16 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'Helpers/ticket_model.dart';
+
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(TicketAdapter());
+  await Hive.openBox<Ticket>('tickets');
+
   runApp(const TicketMaster());
 }
 
@@ -85,16 +93,46 @@ class TicketPageState extends State<TicketPage> {
   late String imageUrl;
 
   final ImagePicker _picker = ImagePicker();
+  final Box<Ticket> _ticketBox = Hive.box<Ticket>('tickets');
 
   @override
   void initState() {
     super.initState();
-   
-    section = 'FLR1';
-    row = '0';
-    date = '2024-08-01';
-    time = '00:00';
-    imageUrl = 'assets/images/seat1.png'; 
+    _loadTicketDetails();
+  }
+
+  void _loadTicketDetails() {
+    final ticket = _ticketBox.values.firstWhere(
+      (ticket) => ticket.seatNumber == widget.seatNumber,
+      orElse: () => Ticket(
+        seatNumber: widget.seatNumber,
+        section: 'FLR1',
+        row: '0',
+        date: '2024-08-01',
+        time: '00:00',
+        imageUrl: 'assets/images/seat1.png',
+      ),
+    );
+
+    setState(() {
+      section = ticket.section;
+      row = ticket.row;
+      date = ticket.date;
+      time = ticket.time;
+      imageUrl = ticket.imageUrl;
+    });
+  }
+
+  void _saveTicketDetails() {
+    final ticket = Ticket(
+      seatNumber: widget.seatNumber,
+      section: section,
+      row: row,
+      date: date,
+      time: time,
+      imageUrl: imageUrl,
+    );
+    _ticketBox.put(widget.seatNumber, ticket);
   }
 
   @override
@@ -247,6 +285,7 @@ class TicketPageState extends State<TicketPage> {
           actions: [
             ElevatedButton(
               onPressed: () {
+                _saveTicketDetails();
                 Navigator.of(context).pop();
               },
               child: const Text('Save'),
@@ -255,4 +294,5 @@ class TicketPageState extends State<TicketPage> {
         );
       },
     );
-  }}
+  }
+}
